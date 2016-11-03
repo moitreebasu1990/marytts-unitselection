@@ -2,6 +2,9 @@ plugins {
     id 'groovy'
 }
 
+group 'de.dfki.mary'
+version '6.0-SNAPSHOT'
+
 repositories {
     jcenter()
     ivy {
@@ -39,6 +42,10 @@ configurations {
 
 dependencies {
     compile group: 'de.dfki.mary', name: 'marytts-runtime', version: '5.2'
+    compile(group: 'de.dfki.mary', name: 'marytts-builder', version: '5.2') {
+        exclude module: 'sgt'
+        exclude module: 'mwdumper'
+    }
     testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
     testData group: 'org.festvox', name: 'cmu_time_awb', classifier: 'ldom', ext: 'tar.bz2'
 }
