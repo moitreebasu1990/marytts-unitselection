@@ -65,5 +65,5 @@ task integrationTest(type: Test) {
 }
 
 tasks.withType(Test) {
-    useJUnit()
+    useTestNG()
 }
