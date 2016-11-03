@@ -28,6 +28,7 @@ sourceSets {
 }
 
 configurations {
+    testData
     integrationTestCompile {
         extendsFrom testCompile
     }
@@ -39,6 +40,20 @@ configurations {
 dependencies {
     compile group: 'de.dfki.mary', name: 'marytts-runtime', version: '5.2'
     testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
+    testData group: 'org.festvox', name: 'cmu_time_awb', classifier: 'ldom', ext: 'tar.bz2'
+}
+
+processTestResources {
+    from configurations.testData
+    filesMatching '*.tar.bz2', { tarFileDetails ->
+        copy {
+            from tarTree(tarFileDetails.file)
+            into destinationDir
+            include '**/wav/*.wav'
+            includeEmptyDirs = false
+        }
+        tarFileDetails.exclude()
+    }
 }
 
 task integrationTest(type: Test) {
