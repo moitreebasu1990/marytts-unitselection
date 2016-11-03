@@ -56,6 +56,10 @@ processTestResources {
     }
 }
 
+test {
+    systemProperty 'testResourceDir', "$sourceSets.test.output.resourcesDir/cmu_time_awb"
+}
+
 task integrationTest(type: Test) {
     group 'Verification'
     description 'Runs the integration tests.'
@@ -65,5 +69,5 @@ task integrationTest(type: Test) {
 }
 
 tasks.withType(Test) {
-    useJUnit()
+    useTestNG()
 }
