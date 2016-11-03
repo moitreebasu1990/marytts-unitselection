@@ -10,6 +10,10 @@ public class Timeline {
         return timeline;
     }
 
+    public void load(File timelineFile) {
+        // not yet implemented
+    }
+
     public void saveTo(File timelineFile) {
         // not yet implemented
     }
