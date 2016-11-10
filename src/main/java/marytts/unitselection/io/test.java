@@ -1,10 +1,11 @@
 package marytts.unitselection.io;
 
+import org.apache.commons.io.FilenameUtils;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by moitree on 07/11/16.
@@ -19,7 +20,7 @@ public class test {
         //If this pathname does not denote a directory, then listFiles() returns null.
 
         for (File file : files) {
-            if (file.isFile()) {
+            if (file.isFile() && FilenameUtils.getExtension(file.getAbsolutePath()).equalsIgnoreCase("wav")) {
                 System.out.println(file.getAbsolutePath());
                 wavFileList.add(file.getAbsolutePath());
             }
@@ -71,7 +72,7 @@ public class test {
                             waveFile.add(b);
                         }
                     }
-                    //System.out.println(totalFramesRead);
+                    //System.out.println(totalFramesRead);R
                     //System.out.println(audioBytes.length);
                     //System.out.println(waveFile);
                     waveFiles.add(waveFile);
@@ -89,10 +90,10 @@ public class test {
     }
 
     public static void main(String[] args) {
-        ArrayList<String> wavFileList = createArrayListWav("/Users/moitree/Desktop/Test");
+        ArrayList<String> wavFileList = createArrayListWav("/Users/pradipta/workspace/dfki/files");
         ArrayList<Object> wavefiles = readWavFiles(wavFileList);
 
-        System.out.println(wavefiles.get(2));
+        System.out.println("Contents of the .wav file is :"+ "\n"+ wavefiles.get(0));
     }
 }
 
