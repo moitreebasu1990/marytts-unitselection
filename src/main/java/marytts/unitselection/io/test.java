@@ -1,5 +1,7 @@
 package marytts.unitselection.io;
 
+import marytts.unitselection.data.TimelineReader;
+import marytts.util.data.Datagram;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.sound.sampled.AudioInputStream;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
  */
 public class test {
 
-    public ArrayList createArrayListWav(String wavDir) {
+    public ArrayList<String> createArrayListWav(String wavDir) {
 
         ArrayList<String> wavFileList = new ArrayList<String>();
         File[] files = new File(wavDir).listFiles();
@@ -81,7 +83,7 @@ public class test {
                     System.err.println(ex);
                 }
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         }
 
@@ -94,7 +96,7 @@ public class test {
 
     public static void main(String[] args) {
 
-        test wavReader = new test();
+        /*test wavReader = new test();
         ArrayList<String> wavFileList = wavReader.createArrayListWav("/Users/pradipta/workspace/dfki/files");
         ArrayList<Object> wavefiles = wavReader.readWavFiles(wavFileList);
 
@@ -102,6 +104,18 @@ public class test {
         byte [] x = (byte[]) wavefiles.get(0);
         for(byte b : x){
             System.out.print(b);
+        }*/
+
+        try {
+            TimelineReader treader = new TimelineReader("/Users/pradipta/workspace/dfki/files/timeline_waveforms.mry");
+            System.out.println(treader.getNumDatagrams());
+
+            Datagram dg = treader.getDatagram(05);
+
+            System.out.println(dg);
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

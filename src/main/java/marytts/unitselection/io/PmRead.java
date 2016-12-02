@@ -2,8 +2,11 @@ package marytts.unitselection.io;
 
 
 import marytts.util.data.Datagram;
-import marytts.util.io.BasenameList;
+import marytts.util.data.ESTTrackReader;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +36,7 @@ public class PmRead {
 
 
 
-        Datagram waveDatagram = new Datagram(12,x);
+        Datagram waveDatagram = new Datagram(1,x);
 
         System.out.println("=====================\n\nContents of the datagram is :");
         for (byte b: waveDatagram.getData()) {
@@ -42,31 +45,20 @@ public class PmRead {
 
         }
 
-        //System.out.println(dg.getDuration());
-        /*PmRead pmread = new PmRead();
+       /* PmRead pmread = new PmRead();
         ArrayList pmFileList = pmread.getPmFileList();
         pmread.readPitchMarkFile(pmFileList);
-        System.out.println("");*/
+        System.out.println("");
+*/
+    }
 
-        BasenameList bstList = new BasenameList("/Users/pradipta/workspace/dfki/files", "wav") ;
-        try {
-            bstList.write("/Users/pradipta/workspace/dfki/files/basename.lst");
-            System.out.println(bstList.getListAsArray().length);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+    public static void call(String[] args){
 
+        //run();
+        System.out.println("");
 
     }
 
-    public static void main(String[] args){
-
-        run();
-
-    }
-
-    /**
     public void readPitchMarkFile(ArrayList pmFileList) {
 
         for (int fileCounter = 0; fileCounter < pmFileList.size(); fileCounter++) {
@@ -98,6 +90,5 @@ public class PmRead {
         return pmFileList;
 
     }
-     */
 
 }

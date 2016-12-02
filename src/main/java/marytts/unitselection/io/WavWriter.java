@@ -16,7 +16,7 @@ public class WavWriter {
 
     public static void main(String[] args) throws IOException {
 
-        double sampleRate = 44100.0;
+        double sampleRate = 16000.0;
         double frequency = 440;
         double frequency2 = 90;
         double amplitude = 1.0;
