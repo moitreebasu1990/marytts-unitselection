@@ -1,5 +1,7 @@
 package marytts.unitselection.io;
 
+import marytts.unitselection.data.TimelineReader;
+import marytts.util.data.Datagram;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.sound.sampled.AudioInputStream;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
  */
 public class test {
 
-    public static ArrayList createArrayListWav(String wavDir) {
+    public ArrayList<String> createArrayListWav(String wavDir) {
 
         ArrayList<String> wavFileList = new ArrayList<String>();
         File[] files = new File(wavDir).listFiles();
@@ -30,10 +32,10 @@ public class test {
 
     }
 
-    public static ArrayList readWavFiles(ArrayList wavFileList) {
+    public ArrayList readWavFiles(ArrayList wavFileList) {
 
         int totalFramesRead = 0;
-        ArrayList<Object> waveFiles = new ArrayList<>();
+        ArrayList<byte[]> waveFiles = new ArrayList<>();
 
 
         for (int file = 0; file < wavFileList.size(); file++) {
@@ -54,7 +56,8 @@ public class test {
                 System.out.println("Buffer size is:" + numBytes);
 
                 byte[] audioBytes = new byte[numBytes];
-                ArrayList<Byte> waveFile = new ArrayList<Byte>();
+
+                ArrayList<byte[]> waveFile = new ArrayList<>();
 
                 try {
                     int numBytesRead = 0;
@@ -68,19 +71,19 @@ public class test {
                         // Calculate the number of frames actually read.
                         numFramesRead = numBytesRead / bytesPerFrame;
                         totalFramesRead += numFramesRead;
-                        for (byte b : audioBytes) {
+                        /*for (byte b : audioBytes) {
                             waveFile.add(b);
-                        }
+                        }*/
                     }
                     //System.out.println(totalFramesRead);R
                     //System.out.println(audioBytes.length);
                     //System.out.println(waveFile);
-                    waveFiles.add(waveFile);
+                    waveFiles.add(audioBytes);
                 } catch (Exception ex) {
                     System.err.println(ex);
                 }
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         }
 
@@ -92,10 +95,28 @@ public class test {
 
 
     public static void main(String[] args) {
-        ArrayList<String> wavFileList = createArrayListWav("/Users/pradipta/workspace/dfki/files");
-        ArrayList<Object> wavefiles = readWavFiles(wavFileList);
 
-        System.out.println("Contents of the .wav file is :"+ "\n"+ wavefiles.get(0));
+        /*test wavReader = new test();
+        ArrayList<String> wavFileList = wavReader.createArrayListWav("/Users/pradipta/workspace/dfki/files");
+        ArrayList<Object> wavefiles = wavReader.readWavFiles(wavFileList);
+
+        System.out.println("Contents of the .wav file is :"+ "\n");
+        byte [] x = (byte[]) wavefiles.get(0);
+        for(byte b : x){
+            System.out.print(b);
+        }*/
+
+        try {
+            TimelineReader treader = new TimelineReader("/Users/pradipta/workspace/dfki/files/timeline_waveforms.mry");
+            System.out.println(treader.getNumDatagrams());
+
+            Datagram dg = treader.getDatagram(05);
+
+            System.out.println(dg);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
 
