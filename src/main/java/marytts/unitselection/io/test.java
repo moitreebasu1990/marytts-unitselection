@@ -23,7 +23,7 @@ public class test {
 
         for (File file : files) {
             if (file.isFile() && FilenameUtils.getExtension(file.getAbsolutePath()).equalsIgnoreCase("wav")) {
-                System.out.println(file.getAbsolutePath());
+                //System.out.println(file.getAbsolutePath());
                 wavFileList.add(file.getAbsolutePath());
             }
         }
@@ -42,7 +42,7 @@ public class test {
             File fileIn = new File((String) wavFileList.get(file));
             try {
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileIn);
-                System.out.println(audioInputStream.getFormat());
+                //System.out.println(audioInputStream.getFormat());
                 int bytesPerFrame = audioInputStream.getFormat().getFrameSize();
                 if (bytesPerFrame == AudioSystem.NOT_SPECIFIED) {
                     bytesPerFrame = 1;
