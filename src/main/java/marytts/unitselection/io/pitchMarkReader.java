@@ -7,6 +7,7 @@ import marytts.util.data.ESTTrackReader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -14,9 +15,9 @@ import java.io.DataOutputStream;
  */
 public class pitchMarkReader {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Datagram tempDatagram;
-        ESTTrackReader pitchReader = new ESTTrackReader("/Users/pradipta/workspace/dfki/files/arctic_a0123.pm");
+        ESTTrackReader pitchReader = new ESTTrackReader("./arctic_a0001.pm");
 
         System.out.print("The time array is : ");
         for (float time : pitchReader.getTimes())
@@ -24,14 +25,14 @@ public class pitchMarkReader {
 
         float[][] pitchFrames = pitchReader.getFrames();
 
-        System.out.println("\n\nThe frame array has length: " + pitchReader.getTimeSpan());
-        WavReader newWavReader = new WavReader("/Users/pradipta/workspace/dfki/files/arctic_a0123.wav");
+//        System.out.println("\n\nThe frame array has length: " + pitchReader.getTimeSpan());
+        WavReader newWavReader = new WavReader("./arctic_a0001.wav");
         System.out.println(newWavReader.getSampleRate());
 
         short[] wave = newWavReader.getSamples();
         int globSampleRate = newWavReader.getSampleRate();
 
-        TimelineWriter waveTimeline = new TimelineWriter("x.mry", "\n", globSampleRate, 0.1);
+        TimelineWriter waveTimeline = new TimelineWriter("./arctic_a0001_Generated.mry", "\n", globSampleRate, 1);
 
         /* - Reset the frame locations in the local file */
         int frameStart, numDatagrams = 0;
@@ -45,7 +46,13 @@ public class pitchMarkReader {
             frameStart = frameEnd;
             frameEnd = (int) ((double) pitchReader.getTime(f) * (double) (globSampleRate));
 
+            //System.out.println(frameStart + " ---> "+ frameEnd);
+
             int duration = frameEnd - frameStart;
+
+            //System.out.println(duration);
+
+            assert frameEnd <= wave.length : "Frame ends after end of wave data: " + frameEnd + " > " + wave.length;
             ByteArrayOutputStream buff = new ByteArrayOutputStream(2 * duration);
             DataOutputStream subWave = new DataOutputStream(buff);
 
@@ -70,13 +77,11 @@ public class pitchMarkReader {
 
                 }*/
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
-
         }
 
+        waveTimeline.close();
     }
 }

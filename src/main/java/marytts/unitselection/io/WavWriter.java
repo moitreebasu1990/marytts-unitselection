@@ -56,14 +56,18 @@ public class WavWriter {
         boolean signed = true;
         int bits = 16;
         int channels = 1;
-        final byte[] byteBuffer = wavContent;
 
         File out = new File(fileName);
 
-        AudioFormat format =  new AudioFormat((float) sampleRate, bits, channels, signed, bigEndian);
-        ByteArrayInputStream bais = new ByteArrayInputStream(byteBuffer);
-        AudioInputStream audioInputStream;
-        audioInputStream = new AudioInputStream(bais, format, byteBuffer.length);
+        AudioFormat format =  new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                (float)sampleRate,
+                bits,
+                channels,
+                2, // frameSize
+                8000f,// frameRate
+                bigEndian);
+        ByteArrayInputStream bais = new ByteArrayInputStream(wavContent);
+        AudioInputStream audioInputStream = new AudioInputStream(bais, format, wavContent.length);
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, out);
         audioInputStream.close();
 
