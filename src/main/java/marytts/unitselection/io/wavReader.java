@@ -10,9 +10,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by moitree on 07/11/16.
+ * Created by pradipta on 06/12/16.
  */
-public class test {
+public class wavReader {
+
 
     public ArrayList<String> createArrayListWav(String wavDir) {
 
@@ -23,7 +24,7 @@ public class test {
 
         for (File file : files) {
             if (file.isFile() && FilenameUtils.getExtension(file.getAbsolutePath()).equalsIgnoreCase("wav")) {
-                System.out.println(file.getAbsolutePath());
+                //System.out.println(file.getAbsolutePath());
                 wavFileList.add(file.getAbsolutePath());
             }
         }
@@ -42,7 +43,7 @@ public class test {
             File fileIn = new File((String) wavFileList.get(file));
             try {
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileIn);
-                System.out.println(audioInputStream.getFormat());
+                //System.out.println(audioInputStream.getFormat());
                 int bytesPerFrame = audioInputStream.getFormat().getFrameSize();
                 if (bytesPerFrame == AudioSystem.NOT_SPECIFIED) {
                     bytesPerFrame = 1;
@@ -96,28 +97,15 @@ public class test {
 
     public static void main(String[] args) {
 
-        /*test wavReader = new test();
-        ArrayList<String> wavFileList = wavReader.createArrayListWav("/Users/pradipta/workspace/dfki/files");
-        ArrayList<Object> wavefiles = wavReader.readWavFiles(wavFileList);
+        wavReader waveFileReader = new wavReader();
+        ArrayList<String> wavFileList = waveFileReader.createArrayListWav("/Users/pradipta/workspace/dfki/files");
+        ArrayList<byte[]> wavefiles = waveFileReader.readWavFiles(wavFileList);
 
         System.out.println("Contents of the .wav file is :"+ "\n");
-        byte [] x = (byte[]) wavefiles.get(0);
+        byte [] x = wavefiles.get(0);
         for(byte b : x){
             System.out.print(b);
-        }*/
-
-        try {
-            TimelineReader treader = new TimelineReader("/Users/pradipta/workspace/dfki/files/timeline_waveforms.mry");
-            System.out.println(treader.getNumDatagrams());
-
-            Datagram dg = treader.getDatagram(05);
-
-            System.out.println(dg);
-
-        }catch (Exception e){
-            e.printStackTrace();
         }
+
     }
 }
-
-

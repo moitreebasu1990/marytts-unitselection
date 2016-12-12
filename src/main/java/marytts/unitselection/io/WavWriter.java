@@ -23,12 +23,14 @@ public class WavWriter {
         double seconds = 2.0;
         double twoPiF = 2 * Math.PI * frequency;
         double piF = Math.PI * frequency2;
+
         float[] buffer = new float[(int) (seconds * sampleRate)];
 
         for (int sample = 0; sample < buffer.length; sample++) {
             double time = sample / sampleRate;
             buffer[sample] = (float) (amplitude * Math.cos((double) piF * time) * Math.sin(twoPiF * time));
         }
+
 
         final byte[] byteBuffer = new byte[buffer.length * 2];
 
@@ -41,18 +43,30 @@ public class WavWriter {
             byteBuffer[i] = (byte) (x >>> 8);
         }
 
-        File out = new File("./out10.wav");
+       WavWriter newWavWriter = new WavWriter();
+
+       newWavWriter.writeWavFile("./out.wav",byteBuffer);
+
+    }
+
+    public void writeWavFile(String fileName, byte [] wavContent) throws IOException{
+
+        double sampleRate = 16000.0;
         boolean bigEndian = false;
         boolean signed = true;
         int bits = 16;
         int channels = 1;
-        AudioFormat format;
-        format = new AudioFormat((float) sampleRate, bits, channels, signed, bigEndian);
+        final byte[] byteBuffer = wavContent;
+
+        File out = new File(fileName);
+
+        AudioFormat format =  new AudioFormat((float) sampleRate, bits, channels, signed, bigEndian);
         ByteArrayInputStream bais = new ByteArrayInputStream(byteBuffer);
         AudioInputStream audioInputStream;
-        audioInputStream = new AudioInputStream(bais, format, buffer.length);
+        audioInputStream = new AudioInputStream(bais, format, byteBuffer.length);
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, out);
         audioInputStream.close();
+
     }
 
 }
