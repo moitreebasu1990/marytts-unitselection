@@ -18,16 +18,7 @@ public class pitchMarkReader {
     public static void main(String[] args) throws IOException {
         Datagram tempDatagram;
         ESTTrackReader pitchReader = new ESTTrackReader("./arctic_a0001.pm");
-
-        System.out.print("The time array is : ");
-        for (float time : pitchReader.getTimes())
-            System.out.print(time + "\t");
-
-        float[][] pitchFrames = pitchReader.getFrames();
-
-//        System.out.println("\n\nThe frame array has length: " + pitchReader.getTimeSpan());
         WavReader newWavReader = new WavReader("./arctic_a0001.wav");
-        System.out.println(newWavReader.getSampleRate());
 
         short[] wave = newWavReader.getSamples();
         int globSampleRate = newWavReader.getSampleRate();
@@ -46,11 +37,7 @@ public class pitchMarkReader {
             frameStart = frameEnd;
             frameEnd = (int) ((double) pitchReader.getTime(f) * (double) (globSampleRate));
 
-            //System.out.println(frameStart + " ---> "+ frameEnd);
-
             int duration = frameEnd - frameStart;
-
-            //System.out.println(duration);
 
             assert frameEnd <= wave.length : "Frame ends after end of wave data: " + frameEnd + " > " + wave.length;
             ByteArrayOutputStream buff = new ByteArrayOutputStream(2 * duration);
@@ -69,13 +56,6 @@ public class pitchMarkReader {
                 totalTime += duration;
                 localTime += duration;
                 numDatagrams++;
-
-                /*System.out.println("=====================\n\nContents of the datagram no:" + numDatagrams + " is :");
-                for (byte b : tempDatagram.getData()) {
-
-                    System.out.print(b + "\t");
-
-                }*/
 
             } catch (Exception e) {
                 e.printStackTrace();

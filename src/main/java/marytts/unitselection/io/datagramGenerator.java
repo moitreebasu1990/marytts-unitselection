@@ -28,20 +28,14 @@ public class datagramGenerator {
 
         try {
             TimelineReader treader = new TimelineReader("./arctic_a0001_Generated.mry");
-            String fileName = "./arctic_a0001_Generated.mry";
-
-            //test(fileName);
-
-            //UnitSelectionTimelineReader treader = new UnitSelectionTimelineReader(fileName);
             System.out.println(treader.getNumDatagrams());
 
 
             long[] offset = new long[4];
-            //RandomAccessFile wavFile = new RandomAccessFile("./arctic_a0001_Generated.wav","rw");
 
             int sampleRate = treader.getSampleRate();
 
-            Datagram[] dg = treader.getDatagrams(0, treader.getNumDatagrams(), sampleRate, offset);
+            Datagram[] dg = treader.getDatagrams(0, (int)treader.getNumDatagrams(), sampleRate, offset);
 
             for (Datagram b : dg) {
                 dataGramSize += b.getData().length;
@@ -53,16 +47,21 @@ public class datagramGenerator {
 
             for (Datagram b : dg) {
                 bb.put(b.getData());
-                //b.write(wavFile);
             }
 
-            for (byte b : bb.array()){
-                System.out.println(b);
+            ArrayList<Byte> WavData = new ArrayList<Byte>();
+
+            for (int i = 0; i<bb.array().length; i++){
+                if( i % 2 != 0) {
+                    WavData.add(bb.get(i));
+                }
             }
 
-            //wavFile.close();
-            WavWriter newWavWriter = new WavWriter();
-            newWavWriter.writeWavFile("./arctic_a0001_Generated.wav", bb.array());
+            System.out.println(bb.array().length);
+
+            Wav wavWriter = new Wav();
+
+           wavWriter.export("./arctic_a0001_Generated.wav",sampleRate, bb.array());
 
 
         } catch (Exception e) {
