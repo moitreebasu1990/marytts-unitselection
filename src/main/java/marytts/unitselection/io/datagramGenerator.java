@@ -27,7 +27,7 @@ public class datagramGenerator {
         int dataGramSize = 0;
 
         try {
-            TimelineReader treader = new TimelineReader("./arctic_a0001_Generated.mry");
+            TimelineReader treader = new TimelineReader("./resourceFiles/generated/arctic_a0001_Generated.mry");
             System.out.println(treader.getNumDatagrams());
 
 
@@ -42,8 +42,6 @@ public class datagramGenerator {
             }
 
             ByteBuffer bb = ByteBuffer.allocate(dataGramSize);
-
-
 
             for (Datagram b : dg) {
                 bb.put(b.getData());
@@ -61,7 +59,7 @@ public class datagramGenerator {
 
             Wav wavWriter = new Wav();
 
-           wavWriter.export("./arctic_a0001_Generated.wav",sampleRate, bb.array());
+           wavWriter.export("./resourceFiles/generated/arctic_a0001_Generated.wav",sampleRate, bb.array());
 
 
         } catch (Exception e) {

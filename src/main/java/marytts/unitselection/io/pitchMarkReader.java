@@ -17,25 +17,25 @@ public class pitchMarkReader {
 
     public static void main(String[] args) throws IOException {
         Datagram tempDatagram;
-        ESTTrackReader pitchReader = new ESTTrackReader("./arctic_a0001.pm");
-        WavReader newWavReader = new WavReader("./arctic_a0001.wav");
+        ESTTrackReader pitchReader = new ESTTrackReader("./resourceFiles/pm//arctic_a0001.pm");
+        WavReader newWavReader = new WavReader("./resourceFiles/wav/arctic_a0001.wav");
+
 
         short[] wave = newWavReader.getSamples();
         int globSampleRate = newWavReader.getSampleRate();
 
-        TimelineWriter waveTimeline = new TimelineWriter("./arctic_a0001_Generated.mry", "\n", globSampleRate, 1);
+        TimelineWriter waveTimeline = new TimelineWriter("./resourceFiles/generated/arctic_a0001_Generated.mry", "\n", globSampleRate, 1);
 
         /* - Reset the frame locations in the local file */
-        int frameStart, numDatagrams = 0;
-        int frameEnd = 0;
-        double totalTime = 0.0;
-        double localTime = 0.0;
+        int frameStart, numDatagrams = 0, frameEnd = 0;
+        double totalTime = 0.0, localTime = 0.0;
 
         for (int f = 0; f < pitchReader.getNumFrames(); f++) {
 
 
             frameStart = frameEnd;
             frameEnd = (int) ((double) pitchReader.getTime(f) * (double) (globSampleRate));
+
 
             int duration = frameEnd - frameStart;
 
@@ -61,6 +61,7 @@ public class pitchMarkReader {
                 e.printStackTrace();
             }
         }
+        System.out.println(totalTime);
 
         waveTimeline.close();
     }
