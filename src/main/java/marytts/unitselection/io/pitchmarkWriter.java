@@ -36,12 +36,9 @@ public class pitchmarkWriter {
             }
         }
 
-/*      System.out.println(pmFileList.get(1));
-        System.out.println(wavFileList.get(1));
-*/
-
         double wavDurationCounter = 0.0;
         DecimalFormat df = new DecimalFormat("#.#########");
+
         try {
             PrintWriter pmwriter = new PrintWriter("./resourceFiles/generated/pmFile_Generated.pm", "UTF-8");
             pmwriter.write("EST_File Track\n" +

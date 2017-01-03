@@ -20,14 +20,14 @@ import java.util.ArrayList;
 /**
  * Created by moitree on 07/11/16.
  */
-public class datagramGenerator {
+public class mryToWavGenerator {
 
     public static void main(String[] args) {
 
         int dataGramSize = 0;
 
         try {
-            TimelineReader treader = new TimelineReader("./resourceFiles/generated/arctic_a0001_Generated.mry");
+            TimelineReader treader = new TimelineReader("./resourceFiles/generated/arctic_Generated.mry");
             System.out.println(treader.getNumDatagrams());
 
 
@@ -59,7 +59,7 @@ public class datagramGenerator {
 
             Wav wavWriter = new Wav();
 
-           wavWriter.export("./resourceFiles/generated/arctic_a0001_Generated.wav",sampleRate, bb.array());
+           wavWriter.export("./resourceFiles/generated/arctic_Generated.wav",sampleRate, bb.array());
 
 
         } catch (Exception e) {
