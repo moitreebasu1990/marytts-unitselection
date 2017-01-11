@@ -1,10 +1,29 @@
+/**
+ * Copyright 2004-2006 DFKI GmbH.
+ * All Rights Reserved.  Use is subject to license terms.
+ *
+ * This file is part of MARY TTS.
+ *
+ * MARY TTS is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package marytts.unitselection.io;
 
 import marytts.tools.voiceimport.TimelineWriter;
 import marytts.tools.voiceimport.WavReader;
 import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -12,28 +31,31 @@ import java.util.ArrayList;
 
 
 /**
- * Created by pradipta on 06/12/16.
+ * Created by Pradipta Deb on 06/12/16.
  */
 public class PitchmarkAndWavReader {
 
     public static void main(String[] args){
 
         PitchmarkAndWavReader newReader = new PitchmarkAndWavReader();
-        newReader.read();
+        String timelineDir = "./resourceFiles/generated";
+        String wavDir = "./resourceFiles/wav";
+        String pmDir = "./resourceFiles/pm";
+        newReader.read(timelineDir, wavDir, pmDir);
 
     }
 
-    public void read() {
+    public void read(String timelineDir, String wavDir, String pmDir) {
 
         try {
             Datagram tempDatagram;
             int globSampleRate = 16000;
-            TimelineWriter waveTimeline = new TimelineWriter("./resourceFiles/generated/arctic_Generated.mry", "\n", globSampleRate, 1);
+            TimelineWriter waveTimeline = new TimelineWriter(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
 
             ArrayList<String> pmFileList = new ArrayList<String>();
             ArrayList<String> wavFileList = new ArrayList<String>();
-            File[] pmfiles = new File("./resourceFiles/pm").listFiles();
-            File[] wavfiles = new File("./resourceFiles/wav").listFiles();
+            File[] pmfiles = new File(pmDir).listFiles();
+            File[] wavfiles = new File(wavDir).listFiles();
 
             for (File file : pmfiles) {
                 if (file.isFile()) {

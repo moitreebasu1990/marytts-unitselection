@@ -1,47 +1,78 @@
+/**
+ * Copyright 2004-2006 DFKI GmbH.
+ * All Rights Reserved.  Use is subject to license terms.
+ *
+ * This file is part of MARY TTS.
+ *
+ * MARY TTS is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package marytts.unitselection.io;
 
-import marytts.exceptions.MaryConfigurationException;
 import marytts.unitselection.data.TimelineReader;
-import marytts.util.MaryUtils;
 import marytts.util.data.Datagram;
-import marytts.util.data.MaryHeader;
-import org.apache.commons.io.FilenameUtils;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 /**
- * Created by moitree on 07/11/16.
+ * Created by Moitree Basu on 07/11/16.
  */
 public class MryToWavGenerator {
 
     public static void main(String[] args) {
 
         MryToWavGenerator newGenerator = new MryToWavGenerator();
-        newGenerator.compute();
+        String timelineDir = "./resourceFiles/generated";
+        newGenerator.compute(timelineDir);
 
     }
 
-    public void compute(){
+    /**
+     * Outputs the timeline data in wav format.
+     *
+     * @param timelineDir
+     *            The directory path for the timeline file.
+     */
+
+    public void compute(String timelineDir){
 
         int dataGramSize = 0;
 
         try {
-            TimelineReader treader = new TimelineReader("./resourceFiles/generated/arctic_Generated.mry");
-            // System.out.println(treader.getNumDatagrams());
+
+            /**
+             *  Creates a timeline file reader
+             */
+            TimelineReader treader = new TimelineReader(timelineDir+"/Timeline.mry");
 
 
+
+            /**
+             *  Setting wavfile offset, sample rate
+             */
             long[] offset = new long[4];
-
             int sampleRate = treader.getSampleRate();
 
+
+            /**
+             * Getting the datagrams from the Timeline file using the timeline reader.
+             *
+             * Calculating the size of all the datagram to allocate appropriate amount of buffer
+             *
+             * Putting each individual datagram in the buffer.
+             *
+             */
             Datagram[] dg = treader.getDatagrams(0, (int)treader.getNumDatagrams(), sampleRate, offset);
 
             for (Datagram b : dg) {
@@ -54,21 +85,16 @@ public class MryToWavGenerator {
                 bb.put(b.getData());
             }
 
-            ArrayList<Byte> WavData = new ArrayList<Byte>();
 
-            for (int i = 0; i<bb.array().length; i++){
-                if( i % 2 != 0) {
-                    WavData.add(bb.get(i));
-                }
-            }
 
-            // System.out.println(bb.array().length);
-
+            /**
+             *  Writing the bb array content to disk using wav writer.
+             */
             Wav wavWriter = new Wav();
 
-            wavWriter.export("./resourceFiles/generated/arctic_Generated.wav",sampleRate, bb.array());
+            wavWriter.export(timelineDir+"/Timeline.wav",sampleRate, bb.array());
 
-            System.out.println("Regenaration Completed.");
+            System.out.println("Regeneration Completed.");
 
         } catch (Exception e) {
             e.printStackTrace();
