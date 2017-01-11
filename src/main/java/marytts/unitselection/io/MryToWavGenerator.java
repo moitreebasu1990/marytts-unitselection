@@ -23,7 +23,6 @@ package marytts.unitselection.io;
 import marytts.unitselection.data.TimelineReader;
 import marytts.util.data.Datagram;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 /**
  * Created by Moitree Basu on 07/11/16.
@@ -73,6 +72,7 @@ public class MryToWavGenerator {
              * Putting each individual datagram in the buffer.
              *
              */
+
             Datagram[] dg = treader.getDatagrams(0, (int)treader.getNumDatagrams(), sampleRate, offset);
 
             for (Datagram b : dg) {
