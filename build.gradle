@@ -57,6 +57,7 @@ processTestResources {
             from tarTree(tarFileDetails.file)
             into destinationDir
             include '**/wav/*.wav'
+            include '**/pm/*.pm'
             includeEmptyDirs = false
         }
         tarFileDetails.exclude()
