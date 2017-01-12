@@ -58,6 +58,9 @@ public class PitchmarkWriter {
 
     public void write(String timelineDir, String wavDir, String pmDir){
 
+        /**
+         *  Creating the array of filenames in pitchmark and wavfile directory.
+         */
         ArrayList<String> pmFileList = new ArrayList<String>();
         ArrayList<String> wavFileList = new ArrayList<String>();
 
@@ -77,11 +80,23 @@ public class PitchmarkWriter {
             }
         }
 
+        /**
+         *  Setting the output format of each timestamp to be written to disk.
+         */
+
         double wavDurationCounter = 0.0;
         DecimalFormat df = new DecimalFormat("#.#########");
 
+        /**
+         *  Writing the actual content to disk
+         */
+
         try {
             PrintWriter pmWriter = new PrintWriter(timelineDir+"/Timeline.pm", "UTF-8");
+
+            /**
+             *  Boilerplate stuff for each timeline file to be in Mary acceptable format.
+             */
 
             pmWriter.write("EST_File Track\n" +
                     "DataType ascii\n" +
@@ -92,6 +107,10 @@ public class PitchmarkWriter {
                     "BreaksPresent true\n" +
                     "CommentChar ;\n" +
                     "EST_Header_End\n");
+
+            /**
+             *  Reading each wavfile and pitchmark file to write in output stream.
+             */
 
             for (int i = 0; i < pmFileList.size(); i++) {
                 File wavFile = new File(wavFileList.get(i));
@@ -116,6 +135,7 @@ public class PitchmarkWriter {
                 }
                 wavDurationCounter+=durationInSeconds;
                 // System.out.println(wavDurationCounter);
+                audioInputStream.close();
             }
 
             pmWriter.close();

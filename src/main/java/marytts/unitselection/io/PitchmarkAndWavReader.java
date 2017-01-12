@@ -24,6 +24,7 @@ import marytts.tools.voiceimport.TimelineWriter;
 import marytts.tools.voiceimport.WavReader;
 import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -45,10 +46,23 @@ public class PitchmarkAndWavReader {
 
     }
 
+    /**
+     * Reads each (.wav + .pm) file and writes tha data in .mry format to disk.
+     *
+     * @param timelineDir The directory path for the timeline file.
+     * @param wavDir      The directory path for the wav files.
+     * @param pmDir       The directory path for the pitchmark files.
+     */
+
     public void read(String timelineDir, String wavDir, String pmDir) {
 
         try {
-            Datagram tempDatagram;
+
+            /**
+             * Setting global sample rate, creating Timeline writer
+             * & Creating the array of filenames in pitchmark and wavfile directory.
+             */
+
             int globSampleRate = 16000;
             TimelineWriter waveTimeline = new TimelineWriter(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
 
@@ -69,15 +83,16 @@ public class PitchmarkAndWavReader {
                 }
             }
 
+
+            /**
+             *  Read each pitchmark file, cut the wav byte into datagrams using timestamps, write the datagrams to disk.
+             */
             for (int i = 0; i < pmFileList.size(); i++) {
 
                 ESTTrackReader pitchReader = new ESTTrackReader(pmFileList.get(i));
                 WavReader newWavReader = new WavReader(wavFileList.get(i));
-
-
                 short[] wave = newWavReader.getSamples();
 
-            /* - Reset the frame locations in the local file */
                 int frameStart, numDatagrams = 0, frameEnd = 0;
                 double totalTime = 0.0, localTime = 0.0;
 
@@ -91,6 +106,7 @@ public class PitchmarkAndWavReader {
                     int duration = frameEnd - frameStart;
 
                     assert frameEnd <= wave.length : "Frame ends after end of wave data: " + frameEnd + " > " + wave.length;
+
                     ByteArrayOutputStream buff = new ByteArrayOutputStream(2 * duration);
                     DataOutputStream subWave = new DataOutputStream(buff);
 
@@ -99,12 +115,10 @@ public class PitchmarkAndWavReader {
                         subWave.writeShort(wave[frameStart + k]);
                     }
 
-                    tempDatagram = new Datagram(duration, buff.toByteArray());
+                    waveTimeline.feed(new Datagram(duration, buff.toByteArray()), globSampleRate);
 
-                    waveTimeline.feed(tempDatagram, globSampleRate);
-
-                    totalTime += duration;
-                    localTime += duration;
+                    totalTime += (double) duration;
+                    localTime += (double) duration;
                     numDatagrams++;
 
                 }

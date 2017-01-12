@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by Moitree Basu on 14/12/16.
+ * Created by Pradipta Deb on 14/12/16.
  */
 public class Wav {
 
@@ -125,6 +125,7 @@ public class Wav {
         nBytesPerSample = 2;
         buf = new byte[samples.length];
         System.arraycopy(samples, 0, buf, 0, samples.length);
+
         // Byte-swap the samples
         byte b = 0;
         for (int j = 0; j < buf.length; j += 2) {
