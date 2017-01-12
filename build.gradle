@@ -62,10 +62,11 @@ processTestResources {
         }
         tarFileDetails.exclude()
     }
-}
-
-test {
-    systemProperty 'testResourceDir', "$sourceSets.test.output.resourcesDir/cmu_time_awb"
+    doLast {
+        def jsonFile = file("$sourceSets.test.output.resourcesDir/testEnv.json")
+        def testEnv = [testResourceDir: "$sourceSets.test.output.resourcesDir/cmu_time_awb"]
+        jsonFile.text = new groovy.json.JsonBuilder(testEnv).toPrettyString()
+    }
 }
 
 task integrationTest(type: Test) {

@@ -1,5 +1,6 @@
 package marytts.unitselection.io
 
+import groovy.json.JsonSlurper
 import org.testng.annotations.*
 
 class TimelineTest {
@@ -9,7 +10,10 @@ class TimelineTest {
 
     @BeforeClass
     void setUp() {
-        testResourceDir = new File(System.properties.testResourceDir)
+        def json = this.class.getResourceAsStream('/testEnv.json')
+        assert json
+        def testEnv = new JsonSlurper().parse(json)
+        testResourceDir = new File(testEnv.testResourceDir)
         def testTimeLineFile = new File(testResourceDir, 'timeline_waveforms.mry')
         timeline = new Timeline()
         timeline.load(testTimeLineFile)
