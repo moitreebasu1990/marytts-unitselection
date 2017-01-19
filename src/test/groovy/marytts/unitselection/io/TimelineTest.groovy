@@ -20,6 +20,55 @@ class TimelineTest {
     }
 
     @Test(expectedExceptions = AssertionError)
+    void pmAndWavReaderTest() {
+        String wavDirPath = "$testResourceDir/wav"
+        String pmDirPath = "$testResourceDir/pm"
+        String timelineDirPath = "$testResourceDir/timeline"
+
+        def timelineDir = new File(timelineDirPath)
+        if( !timelineDir.exists() ) {
+            // Create the timeline dir if not exist
+            timelineDir.mkdir()
+        }
+        PitchmarkAndWavReader newReader = new PitchmarkAndWavReader()
+        newReader.read(timelineDirPath, wavDirPath, pmDirPath)
+        def actual = new File(timelineDir, 'Timeline.mry')
+        def expected = new File(testResourceDir, 'timeline_waveforms.mry')
+        assert actual == expected
+
+    }
+
+    @Test(expectedExceptions = AssertionError)
+    void pmWriterTest() {
+        String wavDirPath = "$testResourceDir/wav"
+        String pmDirPath = "$testResourceDir/pm"
+        String timelineDirPath = "$testResourceDir/timeline"
+
+        def timelineDir = new File(timelineDirPath)
+        if( !timelineDir.exists() ) {
+            // Create the timeline dir if not exist
+            timelineDir.mkdir()
+        }
+        PitchmarkWriter newWriter = new PitchmarkWriter()
+        newWriter.write(timelineDirPath, wavDirPath, pmDirPath);
+        def actual = new File(timelineDir, 'Timeline.pm')
+        def expected = new File("$testResourceDir/pm", 'time0001.pm')
+        assert actual == expected
+    }
+
+    @Test(expectedExceptions = AssertionError)
+    void mryToWavGenerationTest() {
+        String timelineDirPath = "$testResourceDir/timeline"
+        def timelineDir = new File(timelineDirPath)
+
+        MryToWavGenerator newGenerator = new MryToWavGenerator()
+        newGenerator.compute(timelineDirPath)
+        def actual = new File(timelineDir, 'Timeline.wav')
+        def expected = new File("$testResourceDir/wav", 'time0001.wav')
+        assert actual == expected
+    }
+
+    /*@Test(expectedExceptions = AssertionError)
     void testCreateFrom() {
         def wavDir = new File("$testResourceDir/wav")
         def wavFiles = wavDir.listFiles({ d, f -> f ==~ /.*\.wav/ } as FilenameFilter)
@@ -35,5 +84,5 @@ class TimelineTest {
         timeline.saveTo(actual)
         def expected = new File(testResourceDir, 'timeline_waveforms.mry')
         assert actual == expected
-    }
+    }*/
 }

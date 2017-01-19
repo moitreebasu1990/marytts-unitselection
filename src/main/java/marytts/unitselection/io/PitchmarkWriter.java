@@ -21,7 +21,6 @@
 package marytts.unitselection.io;
 
 import marytts.util.data.ESTTrackReader;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -29,13 +28,14 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Moitree Basu on 02/01/17.
  */
 public class PitchmarkWriter {
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
 
         PitchmarkWriter newWriter = new PitchmarkWriter();
         String timelineDir = "./resourceFiles/generated";
@@ -44,7 +44,7 @@ public class PitchmarkWriter {
         newWriter.write(timelineDir, wavDir, pmDir);
 
     }
-
+*/
     /**
      * Triggers the writing of the pitchmark file to the disk.
      *
@@ -67,6 +67,8 @@ public class PitchmarkWriter {
 
         File[] pmfiles = new File(pmDir).listFiles();
         File[] wavfiles = new File(wavDir).listFiles();
+        Arrays.sort(pmfiles);
+        Arrays.sort(wavfiles);
 
         for (File file : pmfiles) {
             if (file.isFile()) {
@@ -85,7 +87,8 @@ public class PitchmarkWriter {
          */
 
         double wavDurationCounter = 0.0;
-        DecimalFormat df = new DecimalFormat("#.#########");
+        DecimalFormat df = new DecimalFormat("#.######");
+        df.setMinimumFractionDigits(6);
 
         /**
          *  Writing the actual content to disk
@@ -105,7 +108,6 @@ public class PitchmarkWriter {
                     "NumAuxChannels 0\n" +
                     "EqualSpace 0\n" +
                     "BreaksPresent true\n" +
-                    "CommentChar ;\n" +
                     "EST_Header_End\n");
 
             /**
@@ -127,11 +129,12 @@ public class PitchmarkWriter {
                 for (int f = 0; f < pitchReader.getNumFrames(); f++) {
 
                     double timestamp = (double) pitchReader.getTime(f);
+                    //System.out.println(pitchReader.getTime(f));
                     if (i != 0) {
                         timestamp+=wavDurationCounter;
 
                     }
-                    pmWriter.write( Double.valueOf(df.format(timestamp))+"\t1\n");
+                    pmWriter.write( df.format(timestamp) +"\t1\n");
                 }
                 wavDurationCounter+=durationInSeconds;
                 // System.out.println(wavDurationCounter);

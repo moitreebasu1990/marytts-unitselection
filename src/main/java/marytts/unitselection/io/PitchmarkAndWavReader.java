@@ -24,11 +24,11 @@ import marytts.tools.voiceimport.TimelineWriter;
 import marytts.tools.voiceimport.WavReader;
 import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 public class PitchmarkAndWavReader {
 
-    public static void main(String[] args){
+   /* public static void main(String[] args){
 
         PitchmarkAndWavReader newReader = new PitchmarkAndWavReader();
         String timelineDir = "./resourceFiles/generated";
@@ -44,7 +44,7 @@ public class PitchmarkAndWavReader {
         String pmDir = "./resourceFiles/pm";
         newReader.read(timelineDir, wavDir, pmDir);
 
-    }
+    }*/
 
     /**
      * Reads each (.wav + .pm) file and writes tha data in .mry format to disk.
@@ -70,6 +70,8 @@ public class PitchmarkAndWavReader {
             ArrayList<String> wavFileList = new ArrayList<String>();
             File[] pmfiles = new File(pmDir).listFiles();
             File[] wavfiles = new File(wavDir).listFiles();
+            Arrays.sort(pmfiles);
+            Arrays.sort(wavfiles);
 
             for (File file : pmfiles) {
                 if (file.isFile()) {
