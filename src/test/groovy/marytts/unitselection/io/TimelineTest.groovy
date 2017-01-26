@@ -14,9 +14,16 @@ class TimelineTest {
         assert json
         def testEnv = new JsonSlurper().parse(json)
         testResourceDir = new File(testEnv.testResourceDir)
+        def timelineDir = new File("$testResourceDir/timeline")
+        if( !timelineDir.exists() ) {
+            // Create the timeline dir if not exist
+            timelineDir.mkdir()
+        }
         def testTimeLineFile = new File(testResourceDir, 'timeline_waveforms.mry')
         timeline = new Timeline()
         timeline.load(testTimeLineFile)
+
+
     }
 
     @Test(expectedExceptions = AssertionError)
@@ -24,12 +31,8 @@ class TimelineTest {
         String wavDirPath = "$testResourceDir/wav"
         String pmDirPath = "$testResourceDir/pm"
         String timelineDirPath = "$testResourceDir/timeline"
-
         def timelineDir = new File(timelineDirPath)
-        if( !timelineDir.exists() ) {
-            // Create the timeline dir if not exist
-            timelineDir.mkdir()
-        }
+
         PitchmarkAndWavReader newReader = new PitchmarkAndWavReader()
         newReader.read(timelineDirPath, wavDirPath, pmDirPath)
         def actual = new File(timelineDir, 'Timeline.mry')
@@ -56,7 +59,7 @@ class TimelineTest {
         assert actual == expected
     }
 
-    @Test(expectedExceptions = AssertionError)
+    @Test(expectedExceptions = AssertionError , dependsOnMethods = "pmAndWavReaderTest" )
     void mryToWavGenerationTest() {
         String timelineDirPath = "$testResourceDir/timeline"
         def timelineDir = new File(timelineDirPath)
