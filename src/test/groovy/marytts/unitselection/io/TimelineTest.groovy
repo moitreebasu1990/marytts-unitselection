@@ -34,7 +34,7 @@ class TimelineTest {
         def timelineDir = new File(timelineDirPath)
 
         PitchmarkAndWavReader newReader = new PitchmarkAndWavReader()
-        newReader.read(timelineDirPath, wavDirPath, pmDirPath)
+        newReader.createTimeline(timelineDirPath, wavDirPath, pmDirPath)
         def actual = new File(timelineDir, 'Timeline.mry')
         def expected = new File(testResourceDir, 'timeline_waveforms.mry')
         assert actual == expected

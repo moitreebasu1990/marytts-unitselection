@@ -26,7 +26,7 @@ public class Timeline {
 
     public static Timeline createFrom(File wavDir, File pmDir) {
         Timeline timeline = new Timeline();
-        // read and store data, not yet implemented
+        // createTimeline and store data, not yet implemented
         return timeline;
     }
 

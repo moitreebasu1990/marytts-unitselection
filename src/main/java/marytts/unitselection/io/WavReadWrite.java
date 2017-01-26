@@ -20,18 +20,22 @@
 
 package marytts.unitselection.io;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import marytts.util.io.General;
+
+import java.io.*;
 
 /**
  * Created by Pradipta Deb on 14/12/16.
  */
-public class Wav {
+public class WavReadWrite {
 
     private byte[] buf = null;
     private int nBytesPerSample = 0;
+    private int numSamples;
+    private int sampleRate;
+    private short[] samples;
+    private int headerSize;
+    private static final short RIFF_FORMAT_PCM = 0x0001;
 
     /**
      * Byte swapping for int values.
@@ -135,6 +139,145 @@ public class Wav {
         }
         // Do the write
         doWrite(fileName, sampleRate);
+    }
+
+    public void read (String fileName) {
+        try {
+			/* Open the file */
+            FileInputStream fis = new FileInputStream(fileName);
+			/* Stick the file to a DataInputStream to allow easy reading of primitive classes (numbers) */
+            DataInputStream dis = new DataInputStream(fis);
+			/* Parse the header and load the data */
+            loadHeaderAndData(dis);
+			/* Close the file */
+            fis.close();
+        } catch (FileNotFoundException e) {
+            throw new Error("WAV file [" + fileName + "] was not found.");
+        } catch (SecurityException e) {
+            throw new Error("You do not have createTimeline access to the file [" + fileName + "].");
+        } catch (IOException e) {
+            throw new Error("IO Exception caught when closing file [" + fileName + "]: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Read in a wave from a riff format
+     *
+     * @param dis
+     *            DataInputStream to createTimeline data from
+     */
+    private void loadHeaderAndData(DataInputStream dis) {
+        int numChannels = 1; // Only support mono
+
+        try {
+            loadHeader(dis);
+            if (dis.skipBytes(headerSize - 16) != (headerSize - 16)) {
+                throw new Error("Unexpected error parsing wave file.");
+            }
+
+            // Bunch of potential random headers
+            while (true) {
+                String s = new String(General.readChars(dis, 4));
+
+                if (s.equals("data")) {
+                    numSamples = General.readInt(dis, false) / 2;
+                    break;
+                } else if (s.equals("fact")) {
+                    int i = General.readInt(dis, false);
+                    if (dis.skipBytes(i) != i) {
+                        throw new Error("Unexpected error parsing wave file.");
+                    }
+                } else {
+                    throw new Error("Unsupported wave header chunk type " + s);
+                }
+            }
+
+            int dataLength = numSamples * numChannels;
+            samples = new short[numSamples];
+
+            for (int i = 0; i < dataLength; i++) {
+                samples[i] = General.readShort(dis, false);
+            }
+
+        } catch (IOException ioe) {
+            throw new Error("IO error while parsing wave" + ioe.getMessage());
+        }
+
+    }
+
+    private void loadHeader(DataInputStream dis) throws IOException {
+
+        if (!checkChars(dis, "RIFF")) {
+            throw new Error("Invalid wave file format.");
+        }
+        int numBytes = General.readInt(dis, false);
+        if (!checkChars(dis, "WAVEfmt ")) {
+            throw new Error("Invalid wave file format.");
+        }
+
+        headerSize = General.readInt(dis, false);
+
+        if (General.readShort(dis, false) != RIFF_FORMAT_PCM) {
+            throw new Error("Invalid wave file format.");
+        }
+
+        if (General.readShort(dis, false) != 1) {
+            throw new Error("Only mono wave files supported.");
+        }
+
+        sampleRate = General.readInt(dis, false);
+        General.readInt(dis, false);
+        General.readShort(dis, false);
+        General.readShort(dis, false);
+
+    }
+
+    /**
+     * Make sure that a string of characters appear next in the file
+	 *
+     * @param dis
+	 *            DataInputStream to createTimeline in
+	 * @param chars
+	 *            a String containing the ascii characters you want the <code>dis</code> to contain.
+     *
+     * @throws IOException
+	 *             ill-formatted input (end of file, for example)
+	 */
+    private boolean checkChars(DataInputStream dis, String chars) throws IOException {
+        char[] carray = chars.toCharArray();
+        for (int i = 0; i < carray.length; i++) {
+            if ((char) dis.readByte() != carray[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get the sample rate for this wave
+     *
+     * @return sample rate
+     */
+    public int getSampleRate() {
+        return sampleRate;
+    }
+
+    /**
+     * Get the number of samples for this wave
+     *
+     * @return number of samples
+     */
+    public int getNumSamples() {
+        return numSamples;
+    }
+
+    /**
+     * Get the sample data of this wave
+     *
+     * @return samples
+     */
+    public short[] getSamples() {
+        return samples;
     }
 
 }

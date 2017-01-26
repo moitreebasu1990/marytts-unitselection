@@ -50,21 +50,22 @@ public class MryToWavGenerator {
 
         try {
 
-            /**
+            /*
              *  Creates a timeline file reader
              */
             TimelineReader treader = new TimelineReader(timelineDir+"/Timeline.mry");
 
 
 
-            /**
+            /*
              *  Setting wavfile offset, sample rate
              */
+
             long[] offset = new long[4];
             int sampleRate = treader.getSampleRate();
 
 
-            /**
+            /*
              * Getting the datagrams from the Timeline file using the timeline reader.
              *
              * Calculating the size of all the datagram to allocate appropriate amount of buffer
@@ -87,10 +88,11 @@ public class MryToWavGenerator {
 
 
 
-            /**
+            /*
              *  Writing the bb array content to disk using wav writer.
              */
-            Wav wavWriter = new Wav();
+
+            WavReadWrite wavWriter = new WavReadWrite();
 
             wavWriter.export(timelineDir+"/Timeline.wav",sampleRate, bb.array());
 

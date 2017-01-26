@@ -137,7 +137,6 @@ public class PitchmarkWriter {
                     pmWriter.write( df.format(timestamp) +"\t1\n");
                 }
                 wavDurationCounter+=durationInSeconds;
-                // System.out.println(wavDurationCounter);
                 audioInputStream.close();
             }
 

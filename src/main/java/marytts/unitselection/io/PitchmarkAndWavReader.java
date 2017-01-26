@@ -21,7 +21,6 @@
 package marytts.unitselection.io;
 
 import marytts.tools.voiceimport.TimelineWriter;
-import marytts.tools.voiceimport.WavReader;
 import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
 import java.io.ByteArrayOutputStream;
@@ -42,7 +41,7 @@ public class PitchmarkAndWavReader {
         String timelineDir = "./resourceFiles/generated";
         String wavDir = "./resourceFiles/wav";
         String pmDir = "./resourceFiles/pm";
-        newReader.read(timelineDir, wavDir, pmDir);
+        newReader.createTimeline(timelineDir, wavDir, pmDir);
 
     }*/
 
@@ -54,7 +53,7 @@ public class PitchmarkAndWavReader {
      * @param pmDir       The directory path for the pitchmark files.
      */
 
-    public void read(String timelineDir, String wavDir, String pmDir) {
+    public void createTimeline(String timelineDir, String wavDir, String pmDir) {
 
         try {
 
@@ -86,17 +85,19 @@ public class PitchmarkAndWavReader {
             }
 
 
-            /**
-             *  Read each pitchmark file, cut the wav byte into datagrams using timestamps, write the datagrams to disk.
+            /*
+               Read each pitchmark file and corresponding wav file, cut the wav byte into datagrams using timestamps, write the datagrams to disk.
              */
             for (int i = 0; i < pmFileList.size(); i++) {
 
                 ESTTrackReader pitchReader = new ESTTrackReader(pmFileList.get(i));
-                WavReader newWavReader = new WavReader(wavFileList.get(i));
+                WavReadWrite newWavReader = new WavReadWrite();
+                newWavReader.read(wavFileList.get(i));
                 short[] wave = newWavReader.getSamples();
 
-                int frameStart, numDatagrams = 0, frameEnd = 0;
-                double totalTime = 0.0, localTime = 0.0;
+                int frameStart, frameEnd = 0;
+                /*int numDatagrams = 0;
+                double totalTime = 0.0, localTime = 0.0;*/
 
                 for (int f = 0; f < pitchReader.getNumFrames(); f++) {
 
@@ -119,9 +120,9 @@ public class PitchmarkAndWavReader {
 
                     waveTimeline.feed(new Datagram(duration, buff.toByteArray()), globSampleRate);
 
-                    totalTime += (double) duration;
+                    /*totalTime += (double) duration;
                     localTime += (double) duration;
-                    numDatagrams++;
+                    numDatagrams++;*/
 
                 }
 
