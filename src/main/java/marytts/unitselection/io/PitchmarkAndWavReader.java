@@ -20,7 +20,6 @@
 
 package marytts.unitselection.io;
 
-import marytts.tools.voiceimport.TimelineWriter;
 import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
 import java.io.ByteArrayOutputStream;
@@ -63,7 +62,7 @@ public class PitchmarkAndWavReader {
              */
 
             int globSampleRate = 16000;
-            TimelineWriter waveTimeline = new TimelineWriter(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
+            TimelineReadWrite waveTimeline = new TimelineReadWrite(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
 
             ArrayList<String> pmFileList = new ArrayList<String>();
             ArrayList<String> wavFileList = new ArrayList<String>();
@@ -118,7 +117,7 @@ public class PitchmarkAndWavReader {
                         subWave.writeShort(wave[frameStart + k]);
                     }
 
-                    waveTimeline.feed(new Datagram(duration, buff.toByteArray()), globSampleRate);
+                    waveTimeline.writeTimeline(new Datagram(duration, buff.toByteArray()), globSampleRate);
 
                     /*totalTime += (double) duration;
                     localTime += (double) duration;

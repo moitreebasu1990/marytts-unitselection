@@ -20,7 +20,7 @@
 
 package marytts.unitselection.io;
 
-import marytts.unitselection.data.TimelineReader;
+//import marytts.unitselection.data.TimelineReader;
 import marytts.util.data.Datagram;
 import java.nio.ByteBuffer;
 
@@ -53,9 +53,7 @@ public class MryToWavGenerator {
             /*
              *  Creates a timeline file reader
              */
-            TimelineReader treader = new TimelineReader(timelineDir+"/Timeline.mry");
-
-
+            TimelineReadWrite treader = new TimelineReadWrite(timelineDir+"/Timeline.mry");
 
             /*
              *  Setting wavfile offset, sample rate
