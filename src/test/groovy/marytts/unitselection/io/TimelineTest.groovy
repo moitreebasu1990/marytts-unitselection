@@ -20,7 +20,7 @@
 
 package marytts.unitselection.io
 
-import groovy.json.*;
+import groovy.json.*
 import org.testng.annotations.*
 
 

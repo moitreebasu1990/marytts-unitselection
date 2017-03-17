@@ -20,7 +20,6 @@
 
 package marytts.unitselection.io;
 
-//import marytts.unitselection.data.TimelineReader;
 import marytts.util.data.Datagram;
 import java.nio.ByteBuffer;
 
