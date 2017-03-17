@@ -51,6 +51,11 @@ class TimelineTest {
 
     }
 
+    /**
+     *  This test confirms that the application is able to read the pm files and wav files from the corresponding
+     *  directories. Once the files are read, application creates a valid timeline file with .mry extension.
+     */
+
     @Test(expectedExceptions = AssertionError)
     void pmAndWavReaderTest() {
         String wavDirPath = "$testResourceDir/wav"
@@ -65,6 +70,11 @@ class TimelineTest {
         assert actual == expected
 
     }
+
+
+    /**
+     *  This test confirms that the application is able to regenerate the exact pitchmark files.
+     */
 
     @Test(expectedExceptions = AssertionError)
     void pmWriterTest() {
@@ -83,6 +93,13 @@ class TimelineTest {
         def expected = new File("$testResourceDir/pm", 'time0001.pm')
         assert actual == expected
     }
+
+
+    /**
+     *  This test confirms that the application is able to regenerate the total wav files again from already generated
+     *  timeline file.
+     */
+
 
     @Test(expectedExceptions = AssertionError , dependsOnMethods = "pmAndWavReaderTest" )
     void mryToWavGenerationTest() {
