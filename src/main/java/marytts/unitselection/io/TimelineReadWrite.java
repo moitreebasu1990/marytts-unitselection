@@ -86,7 +86,7 @@ public class TimelineReadWrite {
     /****************/
 
     /**
-     * Constructor related to timeline reading
+     * Constructor related to timeline write
      *
      * @param fileName
      * @param processingHeaderString
@@ -367,6 +367,7 @@ public class TimelineReadWrite {
 		/* Load the timeline dimensions */
         sampleRate = headerBB.getInt();
         numDatagrams = headerBB.getLong();
+
         if (sampleRate <= 0 || numDatagrams < 0) {
             throw new MaryConfigurationException("Illegal values in timeline file.");
         }
@@ -374,6 +375,7 @@ public class TimelineReadWrite {
 		/* Load the positions of the various subsequent components */
         datagramsBytePos = (int) headerBB.getLong();
         timeIdxBytePos = (int) headerBB.getLong();
+
         if (timeIdxBytePos < datagramsBytePos) {
             throw new MaryConfigurationException("File seems corrupt: index is expected after data, not before");
         }

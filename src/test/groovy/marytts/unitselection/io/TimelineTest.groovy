@@ -104,10 +104,11 @@ class TimelineTest {
     @Test(expectedExceptions = AssertionError , dependsOnMethods = "pmAndWavReaderTest" )
     void mryToWavGenerationTest() {
         String timelineDirPath = "$testResourceDir/timeline"
+        String pmDirPath = "$testResourceDir/pm"
         def timelineDir = new File(timelineDirPath)
 
         MryToWavGenerator newGenerator = new MryToWavGenerator()
-        newGenerator.compute(timelineDirPath)
+        newGenerator.compute(timelineDirPath,pmDirPath)
         def actual = new File(timelineDir, 'Timeline.wav')
         def expected = new File("$testResourceDir/wav", 'time0001.wav')
         assert actual == expected
