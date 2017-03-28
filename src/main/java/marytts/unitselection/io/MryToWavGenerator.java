@@ -24,7 +24,7 @@ import marytts.util.data.Datagram;
 import java.nio.ByteBuffer;
 
 /**
- * Created by Moitree Basu on 07/11/16.
+ * @author Moitree Basu & Pradipta Deb
  */
 public class MryToWavGenerator {
 

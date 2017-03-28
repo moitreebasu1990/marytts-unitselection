@@ -25,7 +25,7 @@ import org.testng.annotations.*
 
 
 /**
- * Created by Moitree Basu on 25/01/2017.
+ * @author Moitree Basu & Pradipta Deb
  */
 
 class TimelineTest {
