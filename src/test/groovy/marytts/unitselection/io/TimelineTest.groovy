@@ -61,7 +61,7 @@ class TimelineTest {
      *  directories. Once the files are read, application creates a valid timeline file with .mry extension.
      */
 
-    @Test(expectedExceptions = AssertionError)
+    @Test(expectedExceptions = AssertionError, dependsOnMethods = "setUp" )
     void pmAndWavReaderTest() {
         String wavDirPath = "$testResourceDir/wav"
         String pmDirPath = "$testResourceDir/pm"
@@ -81,17 +81,13 @@ class TimelineTest {
      *  This test confirms that the application is able to regenerate the exact pitchmark files.
      */
 
-    @Test(expectedExceptions = AssertionError)
+    @Test(expectedExceptions = AssertionError, dependsOnMethods = "setUp" )
     void pmWriterTest() {
         String wavDirPath = "$testResourceDir/wav"
         String pmDirPath = "$testResourceDir/pm"
         String timelineDirPath = "$testResourceDir/timeline"
-
         def timelineDir = new File(timelineDirPath)
-        if( !timelineDir.exists() ) {
-            // Create the timeline dir if not exist
-            timelineDir.mkdir()
-        }
+
         PitchmarkWriter newWriter = new PitchmarkWriter()
         newWriter.write(timelineDirPath, wavDirPath, pmDirPath);
         def actual = new File(timelineDir, 'Timeline.pm')
