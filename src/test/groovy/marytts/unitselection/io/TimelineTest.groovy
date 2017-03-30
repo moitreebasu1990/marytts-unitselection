@@ -40,9 +40,14 @@ class TimelineTest {
         def testEnv = new JsonSlurper().parse(json)
         testResourceDir = new File(testEnv.testResourceDir)
         def timelineDir = new File("$testResourceDir/timeline")
+        def timelineWavDir = new File("$testResourceDir/timeline/wav")
         if( !timelineDir.exists() ) {
             // Create the timeline dir if not exist
             timelineDir.mkdir()
+        }
+        if( !timelineWavDir.exists() ) {
+            // Create the timeline dir if not exist
+            timelineWavDir.mkdir()
         }
         def testTimeLineFile = new File(testResourceDir, 'timeline_waveforms.mry')
         timeline = new Timeline()

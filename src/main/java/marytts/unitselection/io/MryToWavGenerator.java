@@ -134,7 +134,6 @@ public class MryToWavGenerator {
                     counter++;
                 }
 
-                System.out.println(bb_temp.array());
                 wavWriter.export(timelineDir + "/wav/Timeline" + (i+1) + ".wav", sampleRate, bb_temp.array());
 
 

@@ -41,6 +41,7 @@ configurations {
 }
 
 dependencies {
+    /*compile localGroovy()*/
     compile group: 'de.dfki.mary', name: 'marytts-runtime', version: '5.2'
     compile(group: 'de.dfki.mary', name: 'marytts-builder', version: '5.2') {
         exclude module: 'sgt'
