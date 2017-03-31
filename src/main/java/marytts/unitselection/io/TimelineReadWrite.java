@@ -855,7 +855,7 @@ public class TimelineReadWrite {
          * Construct an index from a data input stream or random access file. Fundamental guarantee: Once created, the index is
          * guaranteed to contain a positive index interval and monotonously rising byte and time pointers.
          *
-         * @param bb
+         * @param raf
          *            byte buffer from which to read the index. Must not be null, and read position must be at start of index.
          * @throws IOException
          *             if there is a problem reading.
@@ -871,7 +871,7 @@ public class TimelineReadWrite {
          * Construct an index from a byte buffer. Fundamental guarantee: Once created, the index is guaranteed to contain a
          * positive index interval and monotonously rising byte and time pointers.
          *
-         * @param rafIn
+         * @param bb
          *            data input from which to read the index. Must not be null, and read position must be at start of index.
          * @throws BufferUnderflowException
          *             if there is a problem reading.
@@ -1130,7 +1130,7 @@ public class TimelineReadWrite {
          * Constructor which loads the procHeader from a RandomAccessFile Fundamental guarantee: after creation, the ProcHeader
          * object has a non-null (but possibly empty) string content.
          *
-         * @param raf
+         * @param bb
          *            input from which to load the processing header. Must not be null and must be positioned so that a processing
          *            header can be read from it.
          *
