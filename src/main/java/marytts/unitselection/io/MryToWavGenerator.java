@@ -57,7 +57,7 @@ public class MryToWavGenerator {
             /*
              *  Creates a timeline file reader
              */
-            TimelineReadWrite treader = new TimelineReadWrite(timelineDir + "/Timeline.mry");
+            TimelineReadWrite treader = new TimelineReadWrite(timelineDir + "/Timeline.mry", false);
 
             /*
              *  Setting wavfile offset, sample rate

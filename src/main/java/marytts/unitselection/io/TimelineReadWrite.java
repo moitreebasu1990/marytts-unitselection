@@ -161,10 +161,11 @@ public class TimelineReadWrite {
      * @param fileName
      * @throws MaryConfigurationException
      */
-    public TimelineReadWrite(String fileName) throws MaryConfigurationException {
+    public TimelineReadWrite(String fileName, Boolean isBasenameTimeline) throws MaryConfigurationException {
         try {
-            load(fileName, true);
+            load(fileName, true, isBasenameTimeline);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new MaryConfigurationException("Cannot load timeline file from " + fileName, e);
         }
     }
@@ -344,7 +345,7 @@ public class TimelineReadWrite {
      * @throws NullPointerException
      *             NullPointerException
      */
-    private void load(String fileName, boolean tryMemoryMapping) throws IOException, BufferUnderflowException,
+    private void load(String fileName, boolean tryMemoryMapping, boolean isBasenameTimeline) throws IOException, BufferUnderflowException,
             MaryConfigurationException, NullPointerException {
         assert fileName != null : "filename is null";
 
@@ -367,6 +368,7 @@ public class TimelineReadWrite {
 		/* Load the timeline dimensions */
         sampleRate = headerBB.getInt();
         numDatagrams = headerBB.getLong();
+
 
         if (sampleRate <= 0 || numDatagrams < 0) {
             throw new MaryConfigurationException("Illegal values in timeline file.");
