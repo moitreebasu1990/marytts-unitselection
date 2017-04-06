@@ -57,7 +57,7 @@ public class MryToWavGenerator {
             /*
              *  Creates a timeline file reader
              */
-            TimelineReadWrite treader = new TimelineReadWrite(timelineDir + "/Timeline.mry", false);
+            TimelineReaderAndWriter treader = new TimelineReaderAndWriter(timelineDir + "/Timeline.mry");
 
             /*
              *  Setting wavfile offset, sample rate
@@ -92,12 +92,15 @@ public class MryToWavGenerator {
              *  Writing the bb array content to disk using wav writer.
              */
 
-            WavReadWrite wavWriter = new WavReadWrite();
+            WavReaderAndWriter wavWriter = new WavReaderAndWriter();
 
             wavWriter.export(timelineDir + "/Timeline.wav", sampleRate, bb.array());
 
 
-            /************************************8********************/
+            /*
+             * This part corresponds to saving the wav files from the datagrams according to their number of frames.
+             *
+             */
 
             ArrayList<String> pmFileList = new ArrayList<String>();
             File[] pmfiles = new File(pmDir).listFiles();
@@ -138,9 +141,6 @@ public class MryToWavGenerator {
 
 
             }
-
-
-            System.out.println("Regeneration Completed.");
 
         } catch (Exception e) {
             e.printStackTrace();

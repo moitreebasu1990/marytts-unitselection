@@ -48,12 +48,12 @@ import marytts.util.data.MaryHeader;
 import marytts.util.io.StreamUtils;
 
 /**
- * The TimelineReadWrite class provides an interface to create or update a Timeline data file in Mary format, and to read data from the timeline file.
+ * The TimelineReaderAndWriter class provides an interface to create or update a Timeline data file in Mary format, and to read data from the timeline file.
  *
  * @author Moitree Basu & Pradipta Deb
  *
  */
-public class TimelineReadWrite {
+public class TimelineReaderAndWriter {
 
     private MaryHeader maryHeader = null;
     private ProcHeader processingHeader = null;
@@ -77,7 +77,7 @@ public class TimelineReadWrite {
     /****************/
     private int indexInterval;
     private long datagramZoneBytePos;
-    private Vector<TimelineReadWrite.IdxField> indexData;
+    private Vector<TimelineReaderAndWriter.IdxField> indexData;
     private long prevBytePos;
     private long prevTimePos;
 
@@ -93,7 +93,7 @@ public class TimelineReadWrite {
      * @param reqSampleRate
      * @param setIdxIntervalInSeconds
      */
-     public TimelineReadWrite(String fileName, String processingHeaderString, int reqSampleRate, double setIdxIntervalInSeconds) {
+     public TimelineReaderAndWriter(String fileName, String processingHeaderString, int reqSampleRate, double setIdxIntervalInSeconds) {
 
 		/* Check the arguments */
         if (reqSampleRate <= 0) {
@@ -126,7 +126,7 @@ public class TimelineReadWrite {
             maryHeader.writeTo(raf);
 
 			/* Make a new processing header and write it */
-            processingHeader = new TimelineReadWrite.ProcHeader(processingHeaderString);
+            processingHeader = new TimelineReaderAndWriter.ProcHeader(processingHeaderString);
             processingHeader.dump(raf);
 
 			/* Make/write the data header */
@@ -146,7 +146,7 @@ public class TimelineReadWrite {
             // Remember important facts for index creation
             indexInterval = (int) Math.round(setIdxIntervalInSeconds * (double) sampleRate);
             datagramZoneBytePos = datagramsBytePos;
-            indexData = new Vector<TimelineReadWrite.IdxField>();
+            indexData = new Vector<TimelineReaderAndWriter.IdxField>();
             prevBytePos = datagramsBytePos;
             prevTimePos = 0;
 
@@ -161,9 +161,9 @@ public class TimelineReadWrite {
      * @param fileName
      * @throws MaryConfigurationException
      */
-    public TimelineReadWrite(String fileName, Boolean isBasenameTimeline) throws MaryConfigurationException {
+    public TimelineReaderAndWriter(String fileName) throws MaryConfigurationException {
         try {
-            load(fileName, true, isBasenameTimeline);
+            load(fileName, true);
         } catch (Exception e) {
             e.printStackTrace();
             throw new MaryConfigurationException("Cannot load timeline file from " + fileName, e);
@@ -244,7 +244,7 @@ public class TimelineReadWrite {
 		/* Go to the end of the file and output the time index */
         timeIdxBytePos = (int) raf.length();
         setBytePointer(timeIdxBytePos);
-        idx = new TimelineReadWrite.Index(indexInterval, indexData);
+        idx = new TimelineReaderAndWriter.Index(indexInterval, indexData);
         idx.dump(raf);
 
 		/* Register the index positions */
@@ -274,7 +274,7 @@ public class TimelineReadWrite {
 		 * index field
 		 */
         while (nextIdxTime < timePosition) {
-            indexData.add(new TimelineReadWrite.IdxField(prevBytePos, prevTimePos));
+            indexData.add(new TimelineReaderAndWriter.IdxField(prevBytePos, prevTimePos));
             nextIdxTime += indexInterval;
         }
 
@@ -345,7 +345,7 @@ public class TimelineReadWrite {
      * @throws NullPointerException
      *             NullPointerException
      */
-    private void load(String fileName, boolean tryMemoryMapping, boolean isBasenameTimeline) throws IOException, BufferUnderflowException,
+    private void load(String fileName, boolean tryMemoryMapping) throws IOException, BufferUnderflowException,
             MaryConfigurationException, NullPointerException {
         assert fileName != null : "filename is null";
 

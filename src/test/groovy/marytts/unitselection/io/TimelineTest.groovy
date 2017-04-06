@@ -115,6 +115,22 @@ class TimelineTest {
         assert actual == expected
     }
 
+    /**
+     *  This test confirms that the application is able to read the Basename Timeline File.
+     */
+
+    @Test(dependsOnMethods = "mryToWavGenerationTest" )
+    void basenameTimlineReaderTest() {
+        String bsnTimelineDirPath = "$testResourceDir"
+        String basenamesOutputDirPath = "$testResourceDir/timeline"
+        def basenamesOutputDir = new File(basenamesOutputDirPath)
+
+        BasenameTimelineReader bsnReader = new BasenameTimelineReader();
+        bsnReader.readBasenameTimeline(bsnTimelineDirPath,basenamesOutputDirPath);
+        def expected = new File(basenamesOutputDir, 'basenames.csv')
+        assert expected != null
+    }
+
     /*@Test(expectedExceptions = AssertionError)
     void testCreateFrom() {
         def wavDir = new File("$testResourceDir/wav")

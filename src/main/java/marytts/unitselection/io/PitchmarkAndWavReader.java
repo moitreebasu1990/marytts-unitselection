@@ -62,7 +62,7 @@ public class PitchmarkAndWavReader {
              */
 
             int globSampleRate = 16000;
-            TimelineReadWrite waveTimeline = new TimelineReadWrite(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
+            TimelineReaderAndWriter waveTimeline = new TimelineReaderAndWriter(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
 
             ArrayList<String> pmFileList = new ArrayList<String>();
             ArrayList<String> wavFileList = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class PitchmarkAndWavReader {
             for (int i = 0; i < pmFileList.size(); i++) {
 
                 ESTTrackReader pitchReader = new ESTTrackReader(pmFileList.get(i));
-                WavReadWrite newWavReader = new WavReadWrite();
+                WavReaderAndWriter newWavReader = new WavReaderAndWriter();
                 newWavReader.read(wavFileList.get(i));
                 short[] wave = newWavReader.getSamples();
 
