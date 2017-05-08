@@ -98,7 +98,7 @@ class TimelineTest {
 
     /**
      *  This test confirms that the application is able to regenerate the total wav files again from already generated
-     *  timeline file.
+     *  timeline file and is able to read the Basename Timeline File.
      */
 
 
@@ -106,30 +106,24 @@ class TimelineTest {
     void mryToWavGenerationTest() {
         String timelineDirPath = "$testResourceDir/timeline"
         String pmDirPath = "$testResourceDir/pm"
+        String bsnTimelineDirPath = "$testResourceDir"
+        String basenamesOutputDirPath = "$testResourceDir/timeline"
+
+        def basenamesOutputDir = new File(basenamesOutputDirPath)
         def timelineDir = new File(timelineDirPath)
 
         MryToWavGenerator newGenerator = new MryToWavGenerator()
-        newGenerator.compute(timelineDirPath,pmDirPath)
+        newGenerator.compute(timelineDirPath,bsnTimelineDirPath,pmDirPath,basenamesOutputDirPath)
+
         def actual = new File(timelineDir, 'Timeline.wav')
         def expected = new File("$testResourceDir/wav", 'time0001.wav')
         assert actual == expected
+
+
+        def expectedCSV = new File(basenamesOutputDir, 'basenames.csv')
+        assert expectedCSV != null
     }
 
-    /**
-     *  This test confirms that the application is able to read the Basename Timeline File.
-     */
-
-    @Test(dependsOnMethods = "mryToWavGenerationTest" )
-    void basenameTimlineReaderTest() {
-        String bsnTimelineDirPath = "$testResourceDir"
-        String basenamesOutputDirPath = "$testResourceDir/timeline"
-        def basenamesOutputDir = new File(basenamesOutputDirPath)
-
-        BasenameTimelineReader bsnReader = new BasenameTimelineReader();
-        bsnReader.readBasenameTimeline(bsnTimelineDirPath,basenamesOutputDirPath);
-        def expected = new File(basenamesOutputDir, 'basenames.csv')
-        assert expected != null
-    }
 
     /*@Test(expectedExceptions = AssertionError)
     void testCreateFrom() {

@@ -23,6 +23,7 @@ import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,9 +36,11 @@ public class MryToWavGenerator {
     public static void main(String[] args) {
 
         MryToWavGenerator newGenerator = new MryToWavGenerator();
-        String timelineDir = "./resourceFiles/generated";
-        String pmDir = "./resourceFiles/pm";
-        newGenerator.compute(timelineDir,pmDir);
+        String timelineDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/timeline";
+        String bsnTimelineDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/";
+        String pmDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/pm";
+        String basenamesOutputDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/";
+        newGenerator.compute(timelineDir,bsnTimelineDir,pmDir,basenamesOutputDir);
 
     }
 
@@ -48,11 +51,50 @@ public class MryToWavGenerator {
      *            The directory path for the timeline file.
      */
 
-    public void compute(String timelineDir, String pmDir) {
+    public void compute(String timelineDir, String bsnTimelineDir, String pmDir, String basenamesOutputDir) {
 
         int dataGramSize = 0;
+        long[] offset = new long[4];
+        ArrayList<String> dataGramNames = new ArrayList<String>();
 
         try {
+
+            /*
+             *  Creates a timeline file reader for the basenames and a .csv file writer to dump the contents os the basename file.
+             */
+            TimelineReaderAndWriter bsnTimelineReader = new TimelineReaderAndWriter(bsnTimelineDir + "/timeline_basenames.mry");
+            PrintWriter writer = new PrintWriter(basenamesOutputDir + "/basenames.csv", "US-ASCII");
+            StringBuilder sb = new StringBuilder();
+
+             /*
+             * Getting the datagrams from the Timeline file using the timeline reader.
+             *
+             * Writing the contents of each datagram unit in the string builder
+             */
+
+            int bsnSampleRate =  bsnTimelineReader.getSampleRate();
+            Datagram[] bsDataGramArray = bsnTimelineReader.getDatagrams(0, (int) bsnTimelineReader.getNumDatagrams(), bsnSampleRate, offset);
+
+            sb.append("Basename");
+            sb.append(",");
+            sb.append("Duration in Seconds");
+            sb.append('\n');
+            sb.append('\n');
+
+            for (Datagram b : bsDataGramArray) {
+                sb.append(new String(b.getData(), "US-ASCII"));
+                dataGramNames.add(new String(b.getData(), "US-ASCII"));
+                sb.append(",");
+                sb.append(String.format("%.4g", (float)b.getDuration()/bsnSampleRate));
+                sb.append('\n');
+            }
+
+            /*
+             * Dumping the string content to .csv file.
+             */
+            writer.write(sb.toString());
+            writer.close();
+
 
             /*
              *  Creates a timeline file reader
@@ -63,8 +105,7 @@ public class MryToWavGenerator {
              *  Setting wavfile offset, sample rate
              */
 
-            long[] offset = new long[4];
-            int sampleRate = treader.getSampleRate();
+            int timelineSampleRate = treader.getSampleRate();
 
 
             /*
@@ -76,7 +117,7 @@ public class MryToWavGenerator {
              *
              */
 
-            Datagram[] dg = treader.getDatagrams(0, (int) treader.getNumDatagrams(), sampleRate, offset);
+            Datagram[] dg = treader.getDatagrams(0, (int) treader.getNumDatagrams(), timelineSampleRate, offset);
 
             for (Datagram b : dg) {
                 dataGramSize += b.getData().length;
@@ -94,7 +135,7 @@ public class MryToWavGenerator {
 
             WavReaderAndWriter wavWriter = new WavReaderAndWriter();
 
-            wavWriter.export(timelineDir + "/Timeline.wav", sampleRate, bb.array());
+            wavWriter.export(timelineDir + "/Timeline.wav", timelineSampleRate, bb.array());
 
 
             /*
@@ -137,8 +178,7 @@ public class MryToWavGenerator {
                     counter++;
                 }
 
-                wavWriter.export(timelineDir + "/wav/Timeline" + (i+1) + ".wav", sampleRate, bb_temp.array());
-
+                wavWriter.export(timelineDir + "/wav/" + dataGramNames.get(i) + ".wav", timelineSampleRate, bb_temp.array());
 
             }
 
