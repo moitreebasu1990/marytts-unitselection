@@ -22,6 +22,8 @@ package marytts.unitselection.io;
 
 import marytts.util.data.Datagram;
 import marytts.util.data.ESTTrackReader;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -34,16 +36,16 @@ import java.util.Arrays;
  */
 public class PitchmarkAndWavReader {
 
-   /* public static void main(String[] args){
+    /*public static void main(String[] args){
 
         PitchmarkAndWavReader newReader = new PitchmarkAndWavReader();
-        String timelineDir = "./resourceFiles/generated";
-        String wavDir = "./resourceFiles/wav";
-        String pmDir = "./resourceFiles/pm";
+        String timelineDir = "/Users/pradipta/Desktop/issue735";
+        String wavDir = "/Users/pradipta/Desktop/issue735/wav";
+        String pmDir = "/Users/pradipta/Desktop/issue735/pm";
         newReader.createTimeline(timelineDir, wavDir, pmDir);
 
-    }*/
-
+    }
+*/
     /**
      * Reads each (.wav + .pm) file and writes tha data in .mry format to disk.
      *
@@ -62,7 +64,7 @@ public class PitchmarkAndWavReader {
              */
 
             int globSampleRate = 16000;
-            TimelineReaderAndWriter waveTimeline = new TimelineReaderAndWriter(timelineDir+"/Timeline.mry", "\n", globSampleRate, 1);
+            TimelineReaderAndWriter waveTimeline = new TimelineReaderAndWriter(timelineDir+"/timeline.mry", "\n", globSampleRate, 1);
 
             ArrayList<String> pmFileList = new ArrayList<String>();
             ArrayList<String> wavFileList = new ArrayList<String>();
@@ -73,13 +75,15 @@ public class PitchmarkAndWavReader {
 
             for (File file : pmfiles) {
                 if (file.isFile()) {
-                    pmFileList.add(file.getPath());
+                    if (FilenameUtils.getExtension(file.getAbsolutePath()).equals("pm"))
+                        pmFileList.add(file.getPath());
                 }
             }
 
             for (File file : wavfiles) {
                 if (file.isFile()) {
-                    wavFileList.add(file.getPath());
+                    if (FilenameUtils.getExtension(file.getAbsolutePath()).equals("wav"))
+                        wavFileList.add(file.getPath());
                 }
             }
 
@@ -88,7 +92,7 @@ public class PitchmarkAndWavReader {
                Read each pitchmark file and corresponding wav file, cut the wav byte into datagrams using timestamps, write the datagrams to disk.
              */
             for (int i = 0; i < pmFileList.size(); i++) {
-
+                System.out.println(pmFileList.get(i));
                 ESTTrackReader pitchReader = new ESTTrackReader(pmFileList.get(i));
                 WavReaderAndWriter newWavReader = new WavReaderAndWriter();
                 newWavReader.read(wavFileList.get(i));

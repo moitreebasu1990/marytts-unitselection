@@ -33,16 +33,16 @@ import java.util.Arrays;
  */
 public class MryToWavGenerator {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         MryToWavGenerator newGenerator = new MryToWavGenerator();
-        String timelineDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/timeline";
+        String timelineDir = "/Users/pradipta/Desktop/issue735";
         String bsnTimelineDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/";
-        String pmDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/pm";
+        String pmDir = "/Users/pradipta/Desktop/issue735/pm";
         String basenamesOutputDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/";
         newGenerator.compute(timelineDir,bsnTimelineDir,pmDir,basenamesOutputDir);
 
-    }
+    }*/
 
     /**
      * Outputs the timeline data in wav format.
@@ -99,7 +99,7 @@ public class MryToWavGenerator {
             /*
              *  Creates a timeline file reader
              */
-            TimelineReaderAndWriter treader = new TimelineReaderAndWriter(timelineDir + "/Timeline.mry");
+            TimelineReaderAndWriter treader = new TimelineReaderAndWriter(timelineDir + "/timeline.mry");
 
             /*
              *  Setting wavfile offset, sample rate
