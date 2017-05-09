@@ -27,7 +27,7 @@ import java.io.*;
 /**
  * Created by Pradipta Deb on 14/12/16.
  */
-public class WavReadWrite {
+public class WavReaderAndWriter {
 
     private byte[] buf = null;
     private int nBytesPerSample = 0;

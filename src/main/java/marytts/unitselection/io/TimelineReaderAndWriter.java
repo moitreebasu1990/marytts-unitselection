@@ -48,12 +48,12 @@ import marytts.util.data.MaryHeader;
 import marytts.util.io.StreamUtils;
 
 /**
- * The TimelineReadWrite class provides an interface to create or update a Timeline data file in Mary format, and to read data from the timeline file.
+ * The TimelineReaderAndWriter class provides an interface to create or update a Timeline data file in Mary format, and to read data from the timeline file.
  *
  * @author Moitree Basu & Pradipta Deb
  *
  */
-public class TimelineReadWrite {
+public class TimelineReaderAndWriter {
 
     private MaryHeader maryHeader = null;
     private ProcHeader processingHeader = null;
@@ -77,7 +77,7 @@ public class TimelineReadWrite {
     /****************/
     private int indexInterval;
     private long datagramZoneBytePos;
-    private Vector<TimelineReadWrite.IdxField> indexData;
+    private Vector<TimelineReaderAndWriter.IdxField> indexData;
     private long prevBytePos;
     private long prevTimePos;
 
@@ -86,14 +86,14 @@ public class TimelineReadWrite {
     /****************/
 
     /**
-     * Constructor related to timeline reading
+     * Constructor related to timeline write
      *
      * @param fileName
      * @param processingHeaderString
      * @param reqSampleRate
      * @param setIdxIntervalInSeconds
      */
-     public TimelineReadWrite(String fileName, String processingHeaderString, int reqSampleRate, double setIdxIntervalInSeconds) {
+     public TimelineReaderAndWriter(String fileName, String processingHeaderString, int reqSampleRate, double setIdxIntervalInSeconds) {
 
 		/* Check the arguments */
         if (reqSampleRate <= 0) {
@@ -126,7 +126,7 @@ public class TimelineReadWrite {
             maryHeader.writeTo(raf);
 
 			/* Make a new processing header and write it */
-            processingHeader = new TimelineReadWrite.ProcHeader(processingHeaderString);
+            processingHeader = new TimelineReaderAndWriter.ProcHeader(processingHeaderString);
             processingHeader.dump(raf);
 
 			/* Make/write the data header */
@@ -146,7 +146,7 @@ public class TimelineReadWrite {
             // Remember important facts for index creation
             indexInterval = (int) Math.round(setIdxIntervalInSeconds * (double) sampleRate);
             datagramZoneBytePos = datagramsBytePos;
-            indexData = new Vector<TimelineReadWrite.IdxField>();
+            indexData = new Vector<TimelineReaderAndWriter.IdxField>();
             prevBytePos = datagramsBytePos;
             prevTimePos = 0;
 
@@ -161,10 +161,11 @@ public class TimelineReadWrite {
      * @param fileName
      * @throws MaryConfigurationException
      */
-    public TimelineReadWrite(String fileName) throws MaryConfigurationException {
+    public TimelineReaderAndWriter(String fileName) throws MaryConfigurationException {
         try {
             load(fileName, true);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new MaryConfigurationException("Cannot load timeline file from " + fileName, e);
         }
     }
@@ -243,7 +244,7 @@ public class TimelineReadWrite {
 		/* Go to the end of the file and output the time index */
         timeIdxBytePos = (int) raf.length();
         setBytePointer(timeIdxBytePos);
-        idx = new TimelineReadWrite.Index(indexInterval, indexData);
+        idx = new TimelineReaderAndWriter.Index(indexInterval, indexData);
         idx.dump(raf);
 
 		/* Register the index positions */
@@ -273,7 +274,7 @@ public class TimelineReadWrite {
 		 * index field
 		 */
         while (nextIdxTime < timePosition) {
-            indexData.add(new TimelineReadWrite.IdxField(prevBytePos, prevTimePos));
+            indexData.add(new TimelineReaderAndWriter.IdxField(prevBytePos, prevTimePos));
             nextIdxTime += indexInterval;
         }
 
@@ -367,6 +368,8 @@ public class TimelineReadWrite {
 		/* Load the timeline dimensions */
         sampleRate = headerBB.getInt();
         numDatagrams = headerBB.getLong();
+
+
         if (sampleRate <= 0 || numDatagrams < 0) {
             throw new MaryConfigurationException("Illegal values in timeline file.");
         }
@@ -374,6 +377,7 @@ public class TimelineReadWrite {
 		/* Load the positions of the various subsequent components */
         datagramsBytePos = (int) headerBB.getLong();
         timeIdxBytePos = (int) headerBB.getLong();
+
         if (timeIdxBytePos < datagramsBytePos) {
             throw new MaryConfigurationException("File seems corrupt: index is expected after data, not before");
         }
@@ -853,7 +857,7 @@ public class TimelineReadWrite {
          * Construct an index from a data input stream or random access file. Fundamental guarantee: Once created, the index is
          * guaranteed to contain a positive index interval and monotonously rising byte and time pointers.
          *
-         * @param bb
+         * @param raf
          *            byte buffer from which to read the index. Must not be null, and read position must be at start of index.
          * @throws IOException
          *             if there is a problem reading.
@@ -869,7 +873,7 @@ public class TimelineReadWrite {
          * Construct an index from a byte buffer. Fundamental guarantee: Once created, the index is guaranteed to contain a
          * positive index interval and monotonously rising byte and time pointers.
          *
-         * @param rafIn
+         * @param bb
          *            data input from which to read the index. Must not be null, and read position must be at start of index.
          * @throws BufferUnderflowException
          *             if there is a problem reading.
@@ -1128,7 +1132,7 @@ public class TimelineReadWrite {
          * Constructor which loads the procHeader from a RandomAccessFile Fundamental guarantee: after creation, the ProcHeader
          * object has a non-null (but possibly empty) string content.
          *
-         * @param raf
+         * @param bb
          *            input from which to load the processing header. Must not be null and must be positioned so that a processing
          *            header can be read from it.
          *

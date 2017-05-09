@@ -40,9 +40,14 @@ class TimelineTest {
         def testEnv = new JsonSlurper().parse(json)
         testResourceDir = new File(testEnv.testResourceDir)
         def timelineDir = new File("$testResourceDir/timeline")
+        def timelineWavDir = new File("$testResourceDir/timeline/wav")
         if( !timelineDir.exists() ) {
             // Create the timeline dir if not exist
             timelineDir.mkdir()
+        }
+        if( !timelineWavDir.exists() ) {
+            // Create the timeline dir if not exist
+            timelineWavDir.mkdir()
         }
         def testTimeLineFile = new File(testResourceDir, 'timeline_waveforms.mry')
         timeline = new Timeline()
@@ -50,6 +55,11 @@ class TimelineTest {
 
 
     }
+
+    /**
+     *  This test confirms that the application is able to read the pm files and wav files from the corresponding
+     *  directories. Once the files are read, application creates a valid timeline file with .mry extension.
+     */
 
     @Test(expectedExceptions = AssertionError)
     void pmAndWavReaderTest() {
@@ -66,17 +76,18 @@ class TimelineTest {
 
     }
 
+
+    /**
+     *  This test confirms that the application is able to regenerate the exact pitchmark files.
+     */
+
     @Test(expectedExceptions = AssertionError)
     void pmWriterTest() {
         String wavDirPath = "$testResourceDir/wav"
         String pmDirPath = "$testResourceDir/pm"
         String timelineDirPath = "$testResourceDir/timeline"
-
         def timelineDir = new File(timelineDirPath)
-        if( !timelineDir.exists() ) {
-            // Create the timeline dir if not exist
-            timelineDir.mkdir()
-        }
+
         PitchmarkWriter newWriter = new PitchmarkWriter()
         newWriter.write(timelineDirPath, wavDirPath, pmDirPath);
         def actual = new File(timelineDir, 'Timeline.pm')
@@ -84,17 +95,35 @@ class TimelineTest {
         assert actual == expected
     }
 
+
+    /**
+     *  This test confirms that the application is able to regenerate the total wav files again from already generated
+     *  timeline file and is able to read the Basename Timeline File.
+     */
+
+
     @Test(expectedExceptions = AssertionError , dependsOnMethods = "pmAndWavReaderTest" )
     void mryToWavGenerationTest() {
         String timelineDirPath = "$testResourceDir/timeline"
+        String pmDirPath = "$testResourceDir/pm"
+        String bsnTimelineDirPath = "$testResourceDir"
+        String basenamesOutputDirPath = "$testResourceDir/timeline"
+
+        def basenamesOutputDir = new File(basenamesOutputDirPath)
         def timelineDir = new File(timelineDirPath)
 
         MryToWavGenerator newGenerator = new MryToWavGenerator()
-        newGenerator.compute(timelineDirPath)
+        newGenerator.compute(timelineDirPath,bsnTimelineDirPath,pmDirPath,basenamesOutputDirPath)
+
         def actual = new File(timelineDir, 'Timeline.wav')
         def expected = new File("$testResourceDir/wav", 'time0001.wav')
         assert actual == expected
+
+
+        def expectedCSV = new File(basenamesOutputDir, 'basenames.csv')
+        assert expectedCSV != null
     }
+
 
     /*@Test(expectedExceptions = AssertionError)
     void testCreateFrom() {
