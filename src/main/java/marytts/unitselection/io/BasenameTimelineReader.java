@@ -59,8 +59,8 @@ public class BasenameTimelineReader {
    /* public static void main(String[] args) {
 
         BasenameTimelineReader bsnReader = new BasenameTimelineReader();
-        String timelineDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb";
-        String basenamesOutputDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/timeline";
+        String timelineDir = "";
+        String basenamesOutputDir = "";
         bsnReader.readBasenameTimeline(timelineDir,basenamesOutputDir);
 
     }*/

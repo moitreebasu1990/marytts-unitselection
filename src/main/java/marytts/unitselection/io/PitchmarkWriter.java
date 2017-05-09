@@ -38,9 +38,9 @@ public class PitchmarkWriter {
    /* public static void main(String[] args) {
 
         PitchmarkWriter newWriter = new PitchmarkWriter();
-        String timelineDir = "./resourceFiles/generated";
-        String wavDir = "./resourceFiles/wav";
-        String pmDir = "./resourceFiles/pm";
+        String timelineDir = "";
+        String wavDir = "";
+        String pmDir = "";
         newWriter.write(timelineDir, wavDir, pmDir);
 
     }

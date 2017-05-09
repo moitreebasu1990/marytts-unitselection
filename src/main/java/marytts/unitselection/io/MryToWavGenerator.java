@@ -36,10 +36,10 @@ public class MryToWavGenerator {
     /*public static void main(String[] args) {
 
         MryToWavGenerator newGenerator = new MryToWavGenerator();
-        String timelineDir = "/Users/pradipta/Desktop/issue735";
-        String bsnTimelineDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/";
-        String pmDir = "/Users/pradipta/Desktop/issue735/pm";
-        String basenamesOutputDir = "/Users/pradipta/workspace/dfki/marytts-unitselection/build/resources/test/cmu_time_awb/";
+        String timelineDir = "";
+        String bsnTimelineDir = "";
+        String pmDir = "";
+        String basenamesOutputDir = "";
         newGenerator.compute(timelineDir,bsnTimelineDir,pmDir,basenamesOutputDir);
 
     }*/

@@ -39,9 +39,9 @@ public class PitchmarkAndWavReader {
     /*public static void main(String[] args){
 
         PitchmarkAndWavReader newReader = new PitchmarkAndWavReader();
-        String timelineDir = "/Users/pradipta/Desktop/issue735";
-        String wavDir = "/Users/pradipta/Desktop/issue735/wav";
-        String pmDir = "/Users/pradipta/Desktop/issue735/pm";
+        String timelineDir = "";
+        String wavDir = "";
+        String pmDir = "";
         newReader.createTimeline(timelineDir, wavDir, pmDir);
 
     }
